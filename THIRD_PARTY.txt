@@ -1,0 +1,21 @@
+parasolid-kit 0.3.7 — MIT AND Apache-2.0
+https://github.com/monozukuri-ai/parasolid-kit
+Приложение выбирает общий ParametricTopologyBuilder для всех точных тел;
+проверки границ, поверхностей и всей геометрии библиотеки сохраняются.
+
+ps-parser — MIT
+https://github.com/khoanguyen-3fc/ps-parser
+Использован assets/sch_13006.s_t (базовая схема), переименованный в
+schema/sch_13006.sch_txt. Исходный заголовок файла сохранён.
+
+cadquery-ocp-novtk / cadquery-ocp-proxy 7.9.3.1.1
+https://github.com/CadQuery/OCP
+Open CASCADE Technology — LGPL 2.1 with Open CASCADE exception
+https://github.com/Open-Cascade-SAS/OCCT
+Исходный код OpenCascade и исключение доступны в официальном репозитории.
+
+msgpack 1.2.3 — Apache-2.0
+https://github.com/msgpack/msgpack-python
+
+Python 3.12.4 / Tcl / Tk — соответствующие лицензии находятся в _internal.
+Сборка: PyInstaller 6.22.3 (GPL с исключением для bootloader).

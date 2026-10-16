@@ -1,0 +1,31 @@
+name: Windows build
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: x64
+          cache: pip
+      - name: Build standalone application
+        shell: pwsh
+        run: ./BUILD.ps1
+      - name: Import and schema smoke check
+        shell: pwsh
+        run: |
+          ./.venv/Scripts/python.exe -m py_compile ShaprConverter.py shapr_core.py
+          ./.venv/Scripts/python.exe -c "import tkinter, OCP, shapr_core; from parasolid_kit.schema import load_schema_catalog; c=load_schema_catalog('schema/sch_13006.sch_txt'); assert c.schema_id == '13006'; print('Imports and schema OK')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ShaprConverter-Windows-build
+          path: dist/ShaprConverter/
+          retention-days: 14

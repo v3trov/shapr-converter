@@ -1,0 +1,25 @@
+name: Conversion problem / Ошибка конвертации
+description: Report an unsupported model or incorrect output / Сообщить об ошибке
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Converter version / Версия конвертера
+    validations:
+      required: true
+  - type: input
+    id: shapr_version
+    attributes:
+      label: Shapr3D version, if known / Версия Shapr3D, если известна
+  - type: textarea
+    id: problem
+    attributes:
+      label: Error and reproduction steps / Ошибка и шаги воспроизведения
+      description: Include the format and Exact bodies only setting. Укажите формат и опцию «Только точные тела».
+    validations:
+      required: true
+  - type: textarea
+    id: model
+    attributes:
+      label: Optional public sample / Необязательная публичная модель
+      description: Attach only a model you can publish. Прикладывайте только модель, которую вправе опубликовать.
