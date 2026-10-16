@@ -6,8 +6,8 @@ Keep _internal beside the EXE. Python and Shapr3D are not required.
 Распакуйте архив целиком и запустите ShaprConverter.exe.
 Папка _internal должна лежать рядом с EXE. Python и Shapr3D не нужны.
 
-English documentation: README.md
-Документация на русском: README.ru.md
+English documentation: README.en.md
+Документация на русском: README.md
 
 Project / Проект: https://github.com/v3trov/shapr-converter
 Author's blog / Блог автора: https://v3trov.pro/

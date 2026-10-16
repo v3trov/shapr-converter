@@ -1,76 +1,72 @@
-# SHAPR Converter — Shapr3D to STL, STEP, OBJ, 3MF, GLB and PLY
+# SHAPR Converter — конвертер Shapr3D в STL, STEP, OBJ, 3MF, GLB и PLY
 
-[Русский](README.ru.md) · **English** · [Download for Windows](https://github.com/v3trov/shapr-converter/releases/latest) · [Author's blog: v3trov.pro](https://v3trov.pro/)
+**Русский** · [English](README.en.md) · [Скачать для Windows](https://github.com/v3trov/shapr-converter/releases/latest) · [Блог автора: v3trov.pro](https://v3trov.pro/)
 
-[![Latest release](https://img.shields.io/github/v/release/v3trov/shapr-converter?include_prereleases)](https://github.com/v3trov/shapr-converter/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Последний релиз](https://img.shields.io/github/v/release/v3trov/shapr-converter?include_prereleases)](https://github.com/v3trov/shapr-converter/releases)
+[![Лицензия MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Windows x64](https://img.shields.io/badge/Windows-x64-0078D4)](https://github.com/v3trov/shapr-converter/releases)
 
-**An offline Windows tool for converting supported Shapr3D `.shapr` projects to common CAD and 3D mesh formats.** The packaged application runs without Shapr3D, an installed Python runtime, a CAD subscription, or an internet connection.
+**Автономный конвертер файлов `.shapr` для Windows.** Преобразует поддерживаемые проекты Shapr3D в распространённые форматы для CAD-программ, слайсеров и 3D-редакторов. Готовая сборка работает без установленного Shapr3D, Python, подписки на CAD-программу и подключения к интернету.
 
-**Experimental compatibility: 11 of 18 author-owned projects converted successfully in the initial test set.** Seven projects still encounter unsupported geometry or fail validation. This is a working recovery tool with documented limits, not a universal SHAPR reader.
+**Совместимость пока экспериментальная: успешно преобразованы 11 из 18 проверенных проектов автора.** У семи остались неподдержанные поверхности или ошибки проверки геометрии. Это рабочий инструмент восстановления с конкретными ограничениями, а не универсальный конвертер любого файла SHAPR.
 
-## Download and convert a SHAPR file
+## Скачать и запустить
 
-1. Download `ShaprConverter-v0.1.0-Windows-x64.zip` from [Releases](https://github.com/v3trov/shapr-converter/releases).
-2. Extract the complete archive. Keep the `_internal` directory beside `ShaprConverter.exe`.
-3. Run `ShaprConverter.exe`, choose a `.shapr` file, an output filename, and a format.
-4. Click **Конвертировать** (Convert). The initial GUI is in Russian; the command-line options are listed below.
+1. Скачайте `ShaprConverter-v0.1.0-Windows-x64.zip` со страницы [Releases](https://github.com/v3trov/shapr-converter/releases).
+2. Распакуйте архив целиком. Папка `_internal` должна находиться рядом с `ShaprConverter.exe`.
+3. Запустите `ShaprConverter.exe`, выберите исходный `.shapr`, имя результата и формат.
+4. Нажмите **Конвертировать**.
 
-The converter reads the source file without modifying it. It refuses to overwrite an existing output. A JSON report records the exported body revisions, units, mesh settings, omitted mesh bodies, and output SHA-256.
+Исходный проект открывается только для чтения. Существующие результаты не перезаписываются. Рядом с выходным файлом сохраняется отчёт `.json`: версии тел, единицы измерения, параметры сетки, явно исключённые сеточные тела и SHA-256 результата.
 
-## Export formats
+## Поддерживаемые форматы
 
-| Output | Geometry and units | Use |
+| Формат | Что получается | Единицы |
 | --- | --- | --- |
-| STL | Triangle mesh, millimetres | Slicers and 3D printing workflows |
-| OBJ | Triangle mesh, millimetres | Blender and other 3D applications |
-| 3MF | Triangle mesh, explicit millimetre units | Slicers; separate exported bodies |
-| GLB / glTF 2.0 | Triangle mesh, metres | Viewers and web-based 3D tools |
-| PLY | Binary triangle mesh, millimetres | Mesh processing |
-| STEP | Supported exact CAD geometry | Further work in CAD software |
+| STL | Треугольная сетка для слайсеров и 3D-печати | Миллиметры |
+| OBJ | Сетка для Blender и других 3D-редакторов | Миллиметры |
+| 3MF | Сетка с раздельными экспортированными телами | Миллиметры, указаны в файле |
+| GLB / glTF 2.0 | Сетка для просмотрщиков и веб-инструментов | Метры |
+| PLY | Бинарная треугольная сетка | Миллиметры |
+| STEP | Поддерживаемая точная CAD-геометрия | Миллиметры |
 
-For STEP, a project containing imported mesh geometry requires the explicit **Только точные тела** (Exact bodies only) option. That option excludes mesh bodies and records the omission; it does not turn a mesh into an exact CAD solid. Sheets can also be present in the saved geometry.
+Для STEP в проекте с импортированной сеткой нужно явно включить **«Только точные тела»**. Сетка будет исключена, а исключение попадёт в отчёт. Эта опция не превращает сетку в точное CAD-тело. В сохранённой геометрии могут присутствовать и листовые тела.
 
-The default tessellation deflection is **0.02 mm**. This is a meshing setting, not a certified end-to-end accuracy guarantee. Imported meshes retain their source detail. Repeated boundary vertices are joined on a 0.000001 mm grid; triangles collapsed by that operation are removed and counted in the report.
+Отклонение при построении сетки по умолчанию — **0,02 мм**. Это настройка триангуляции OpenCascade, а не гарантия полной погрешности преобразования. Импортированные сетки сохраняют исходную детализацию. Повторяющиеся вершины на стыках соединяются на сетке 0,000001 мм; число схлопнувшихся и удалённых треугольников записывается в отчёт.
 
-## Why I made this
+## Почему появился этот проект
 
-Shapr3D is genuinely convenient to model in. I enjoyed using it and made a lot of projects with it. But its subscription costs more than I can justify for my own use, and I am not willing to keep paying for it.
+Shapr3D — действительно удобная программа. Мне нравилось в ней моделировать, и за время использования я сделал немало проектов. Но стоимость подписки для моих задач несоразмерна тому, сколько я готов тратить на такой инструмент. Постоянно платить за неё я не хочу.
 
-A friend had helped me get temporary access to a subscription. Before that access ended, I saved my projects as native `.shapr` files to preserve their geometry and project data rather than settling for a low-detail mesh export. My plan was simple: keep my own work, and convert it to accessible formats later if an opportunity came along.
+Друг помог мне с временным доступом к подписке. До её окончания я успел сохранить свои проекты в родном формате `.shapr`: хотелось оставить геометрию и данные проекта, а не ограничиваться грубой сеткой. Мысль была простая: сохранить собственную работу, а когда появится возможность — перевести её в доступные форматы.
 
-As AI coding tools improved, I wondered whether this could become a small practical experiment: could I make a useful converter in about an hour of vibe coding? The result is this project. It reads supported saved geometry, converts it, and has already helped me recover usable models from my `.shapr` archive. The initial reproducible result is 11 successful conversions out of 18 tested projects; the remaining cases are still work to do.
+С развитием ИИ появилась ещё одна идея: а что, если попробовать решить эту задачу примерно за час вайбкодинга? Не делать очередной макет с кнопкой «Конвертировать», а получить файлы, которые действительно можно открыть в других программах.
 
-I strongly disagree with Shapr3D's approach to export after a subscription ends. In my view, people should retain a straightforward way to export their own designs at full quality into common formats, without renewing a subscription just to retrieve their work in a usable form. I criticize that product decision precisely because the modeling experience itself is so good.
+Так появился SHAPR Converter. Код работает и уже помог вернуть пригодные для дальнейшей работы модели из моего архива `.shapr`. Проверенный результат первой версии — 11 успешных преобразований из 18 проектов. Остальные случаи ещё требуют доработки.
 
-For accuracy: [Shapr3D Basic does officially allow low-resolution STL and 3MF export](https://support.shapr3d.com/hc/en-us/articles/7872024839452-Shapr3D-Basic). My objection is to the limits on high-quality and neutral CAD export, not a claim that every export option disappears.
+Я осуждаю решение Shapr3D привязывать качественный экспорт собственных моделей пользователя к действующей подписке. На мой взгляд, после её окончания у человека должна оставаться простая возможность получить свою работу в распространённых форматах без потери качества. Платить заново только ради того, чтобы забрать собственный результат в пригодном виде, — подход, с которым я не согласен. Особенно обидно видеть такое ограничение у программы, которой в остальном действительно удобно пользоваться.
 
-## What is preserved, and what is not
+При этом важно точно описать ситуацию: [Shapr3D Basic официально разрешает экспорт STL и 3MF низкого разрешения](https://support.shapr3d.com/hc/en-us/articles/7872024839452-Shapr3D-Basic). Претензия — к ограничениям качественного экспорта и нейтральных CAD-форматов после подписки, а не к полному отсутствию любых вариантов выгрузки.
 
-The converter exports **active saved bodies, including hidden bodies**, using the positions stored in their geometry. It checks each saved partition's revision against the latest applicable history operation and excludes bodies consumed or deleted by operations.
+## Что переносится
 
-It does not export sketches, the editable feature history, drawings, materials, colors, or a reconstructed Shapr3D project tree. Separate or overlapping bodies are not automatically fused. A source sheet or open mesh is not automatically repaired into a printable solid.
+Конвертер извлекает **активные сохранённые тела, включая скрытые**, с положением из сохранённой геометрии. Версия каждой секции сверяется с последней соответствующей операцией истории. Детали, удалённые или поглощённые операциями, исключаются.
 
-If any required body in the selected scope cannot be converted, the application reports an error rather than presenting an incomplete project as a successful conversion. Keep the original `.shapr` files.
+Эскизы, редактируемая история построения, чертежи, материалы, цвета и дерево проекта Shapr3D не восстанавливаются. Пересекающиеся тела автоматически не объединяются. Листовое тело или незамкнутая исходная сетка автоматически не превращаются в готовую к печати деталь.
 
-## Compatibility and validation
+Если обязательное тело в выбранном составе проекта не удалось преобразовать, программа выдаёт ошибку и не сохраняет неполный проект как успешный результат. Оригиналы `.shapr` стоит сохранять.
 
-The first test set contained 18 real projects belonging to the author. Eleven exported to 3MF, including two `.shapr` containers of approximately 489 MB. One supported project was also exported to STL, OBJ, PLY, GLB, and STEP; STEP used exact bodies only.
+## Что проверено
 
-Checks included:
+В первоначальном наборе было 18 реальных проектов автора. **11 успешно экспортированы в 3MF**, включая два контейнера размером примерно 489 МБ. Один поддерживаемый проект также проверен в STL, OBJ, PLY, GLB и STEP; для STEP экспортировались только точные тела.
 
-- Independent mesh reimport, triangle counts, finite coordinates, and bounding boxes with unit conversion.
-- STEP reimport, OpenCascade geometry validity, and preservation of face and solid counts.
-- Refusal to export an intentionally mismatched saved revision.
-- Preservation of an existing output file.
-- GUI initialization and execution of the packaged EXE with external Python removed from `PATH`.
+Результаты повторно открывались независимой библиотекой: сверялись количество треугольников, корректность координат и размеры с учётом единиц. STEP повторно читался OpenCascade с проверкой геометрии, количества поверхностей и твёрдых тел. Также проверены отказ при несовпадении версии тела, защита существующего результата, запуск интерфейса и работа EXE без внешнего Python в `PATH`.
 
-Known failures involve swept surfaces, some surface-parameter curve variants, invalid reconstructed parametric faces, or UV trims that disagree with source points. New Shapr3D versions and untested modeling features may require more work. Private source models are not included in this repository or its releases.
+Пока есть ошибки на поверхностях вытягивания `SWEPT_SURF`, отдельных параметрических кривых и некоторых сложных границах поверхностей. Другие версии Shapr3D и другие модели могут потребовать доработки. Личные исходные модели не публикуются в репозитории и релизах.
 
-See [architecture and validation notes](docs/ARCHITECTURE.md) for the implementation boundaries.
+Технические подробности: [архитектура и границы проверки](docs/ARCHITECTURE.md).
 
-## Command line
+## Командная строка
 
 ```powershell
 ShaprConverter.exe model.shapr -o model.stl -f stl
@@ -78,17 +74,11 @@ ShaprConverter.exe model.shapr -o model.3mf -f 3mf --tolerance 0.02
 ShaprConverter.exe model.shapr -o model.step -f step --solids-only
 ```
 
-Exit code `0` means success; `1` means failure. The Windows GUI build does not print console diagnostics. On success, the output and its `.json` report are created.
+Код возврата `0` означает успех, `1` — ошибку. Оконная Windows-сборка не выводит диагностику в консоль; при успехе появляются результат и отчёт `.json`. Для вывода сообщений запускайте исходник через `python ShaprConverter.py`.
 
-To get console messages when running from source:
+## Запуск из исходников и сборка
 
-```powershell
-python ShaprConverter.py model.shapr -o model.obj -f obj
-```
-
-## Run from source or build the Windows application
-
-Use Python **3.12 x64** with Tk support. The released dependencies are pinned in `requirements.txt`.
+Проверенная среда: **Python 3.12 x64 с Tk, Windows x64**. Другие платформы не проверены.
 
 ```powershell
 python -m venv .venv
@@ -96,32 +86,32 @@ python -m venv .venv
 .\.venv\Scripts\python.exe ShaprConverter.py
 ```
 
-Run `BUILD.ps1` to create `dist/ShaprConverter/ShaprConverter.exe`. Dependency installation needs internet access; conversion itself is local. The tested desktop target is Windows x64; other platforms are not validated.
+`BUILD.ps1` создаёт `dist/ShaprConverter/ShaprConverter.exe`. Для установки зависимостей нужен интернет, для преобразования файлов — нет.
 
-## Frequently asked questions
+## Частые вопросы
 
-### Can I convert SHAPR to STL without Shapr3D installed?
+### Можно конвертировать SHAPR в STL без Shapr3D?
 
-Yes, for models supported by this converter. Use the Windows release and select STL. Check the compatibility limits above.
+Да, если геометрия поддерживается этой версией конвертера. Скачайте Windows-сборку и выберите STL.
 
-### Does SHAPR to STEP preserve editable geometry?
+### SHAPR в STEP — это точная геометрия или треугольники?
 
-For supported exact bodies it exports CAD geometry, not a triangle mesh disguised as STEP. It does not preserve Shapr3D's parametric feature history. Imported meshes are excluded only when explicitly requested.
+Для поддерживаемых точных тел экспортируется CAD-геометрия. История построения Shapr3D не переносится. Сетки не маскируются под точные STEP-тела и исключаются только по явному выбору пользователя.
 
-### Are my models uploaded to an online conversion service?
+### Файлы отправляются на сервер?
 
-No. The application reads and converts files locally. It has no conversion service, account login, or telemetry integration.
+Нет. Преобразование происходит локально. В приложении нет сервиса конвертации, входа в аккаунт или телеметрии.
 
-### Will every SHAPR project work?
+### Что делать, если проект не открылся?
 
-No. The initial verified result is 11 out of 18 projects. If your model fails, [open an issue](https://github.com/v3trov/shapr-converter/issues) with the error, application version, and Shapr3D version if known. Only attach a model you are willing to make public.
+Создайте [issue](https://github.com/v3trov/shapr-converter/issues): приложите ошибку, версию конвертера и, если известна, версию Shapr3D. Прикладывайте только модели, которые готовы опубликовать.
 
-## Author and contributions
+## Автор и лицензия
 
-Created by **v3trov**. Author's blog: **[v3trov.pro](https://v3trov.pro/)**.
+Автор — **v3trov**. Блог: **[v3trov.pro](https://v3trov.pro/)**.
 
-Bug reports, reproducible examples, and geometry support improvements are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Исправления, воспроизводимые примеры и расширение поддержки геометрии приветствуются. Подробнее: [CONTRIBUTING.md](CONTRIBUTING.md).
 
-The application code is available under the [MIT License](LICENSE). Third-party components retain their own licenses; see [THIRD_PARTY.txt](THIRD_PARTY.txt) and `licenses/`. The reader and CAD conversion depend on **parasolid-kit**, **OpenCascade / OCP**, and the base schema distributed with **ps-parser**; the project builds on that work.
+Код приложения опубликован под [лицензией MIT](LICENSE). Сторонние компоненты сохраняют свои лицензии: [THIRD_PARTY.txt](THIRD_PARTY.txt), папка `licenses/`. Чтение геометрии и CAD-преобразование опираются на **parasolid-kit**, **OpenCascade / OCP** и базовую схему из **ps-parser** — проект использует результаты работы этих разработчиков.
 
-This is an independent project and is not affiliated with Shapr3D or Siemens.
+Независимый проект. Не связан с Shapr3D или Siemens.
